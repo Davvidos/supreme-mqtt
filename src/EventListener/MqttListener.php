@@ -10,6 +10,6 @@ class MqttListener
     {
         $message = $event->getMessage();
 
-        var_dump($message);
+        print_r($message);
     }
 }

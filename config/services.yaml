@@ -10,6 +10,12 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $user: '%env(string:MQTT_USER)%'
+            $password: '%env(string:MQTT_PASSWORD)%'
+            $host: '%env(string:MQTT_HOST)%'
+            $port: '%env(int:MQTT_PORT)%'
+            $keepAliveInterval: 60
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -24,13 +30,11 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    app.event_listener.mqtt_listener:
-        class: SupremeMqtt\EventListener\MqttListener
+    SupremeMqtt\EventListener\MqttListener:
         tags:
             - { name: kernel.event_listener, event: event.message.received }
 
-    app.service.mosquitto_client_service:
-        class: SupremeMqtt\Client\MqttClient
+    SupremeMqtt\Client\MqttClient:
         arguments:
             $user: '%env(string:MQTT_USER)%'
             $password: '%env(string:MQTT_PASSWORD)%'
@@ -38,15 +42,13 @@ services:
             $port: '%env(int:MQTT_PORT)%'
             $keepAliveInterval: 60
 
-    app.service.mqtt_client_service:
-        class: SupremeMqtt\Service\MqttClientService
+    SupremeMqtt\Service\MqttClientService:
         arguments:
-            $mqttClient: '@app.service.mosquitto_client_service'
-            $mqttListener: '@app.event_listener.mqtt_listener'
+            $mqttClient: '@SupremeMqtt\Client\MqttClient'
+            $mqttListener: '@SupremeMqtt\EventListener\MqttListener'
             $eventDispatcher: '@event_dispatcher'
 
-    app.command.watch_measurements_command:
-        class: SupremeMqtt\Command\WatchMessagesCommand
-        arguments: [ '@app.service.mqtt_client_service' ]
+    SupremeMqtt\Command\WatchMessagesCommand:
+        arguments: ['@SupremeMqtt\Service\MqttClientService']
         tags:
             - { name: console.command }

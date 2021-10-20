@@ -11,20 +11,17 @@ class WatchMessagesCommand extends Command
 {
     protected static $defaultName = 'supreme-mqtt:watch-messages';
 
-    private $mqttClientService;
-
-    public function __construct(MqttClientService $mqttClientService)
-    {
+    public function __construct(
+        private MqttClientService $mqttClientService
+    ) {
         parent::__construct();
-        $this->mqttClientService = $mqttClientService;
     }
 
     protected function configure()
     {
         $this
             ->setDescription('Run watcher to keep all new messages.')
-            ->setHelp(
-                'This command starts watcher that will print all new messages from MQTT channel.');
+            ->setHelp('This command starts watcher that will print all new messages from MQTT channel.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
