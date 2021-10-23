@@ -10,21 +10,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MqttClientService
 {
-    private MqttClient $mqttClient;
-
-    protected MqttListener $mqttListener;
-
-    private EventDispatcherInterface $eventDispatcher;
-
     public function __construct(
-        MqttClient $mqttClient,
-        MqttListener $mqttListener,
-        EventDispatcherInterface $eventDispatcher
-    ) {
-        $this->mqttClient = $mqttClient;
-        $this->mqttListener = $mqttListener;
-        $this->eventDispatcher = $eventDispatcher;
-    }
+        private MqttClient $mqttClient,
+        private MqttListener $mqttListener,
+        private EventDispatcherInterface $eventDispatcher
+    ) {}
 
     public function connect(): void
     {

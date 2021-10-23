@@ -8,8 +8,6 @@ class MqttListener
 {
     public function onMessageReceivedAction(MessageReceivedEvent $event): void
     {
-        $message = $event->getMessage();
-
-        print_r($message);
+        print_r($event->getMessage());
     }
 }
